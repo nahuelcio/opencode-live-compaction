@@ -19,21 +19,33 @@ OpenCode's built-in compaction produces a 7-section summary. This plugin replace
 
 ## Install
 
-### Option 1: Local plugin (recommended)
-
-Copy the source files to your project's plugin directory:
+### Option 1: One-liner (npx)
 
 ```bash
-# Clone or download
-git clone https://github.com/your-org/opencode-live-compaction.git
-
-# Copy to your project
-cp -r opencode-live-compaction/src/* .opencode/plugins/live-compaction/
+npx opencode-live-compaction
+# or specify a project directory:
+npx opencode-live-compaction /path/to/project
 ```
 
-Or create a single file at `.opencode/plugins/live-compaction.ts` with the combined code.
+### Option 2: One-liner (curl + bash)
 
-### Option 2: npm package
+**macOS / Linux:**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.sh | bash
+# or specify a project directory:
+curl -fsSL https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.sh | bash -s /path/to/project
+```
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.ps1 | iex
+# or specify a project directory:
+irm https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.ps1 | iex -TargetDir C:\path\to\project
+```
+
+### Option 3: npm plugin
 
 Add to your `opencode.json`:
 
@@ -41,6 +53,13 @@ Add to your `opencode.json`:
 {
   "plugin": ["opencode-live-compaction"]
 }
+```
+
+### Option 4: Manual
+
+```bash
+git clone https://github.com/nahuelcio/opencode-live-compaction.git
+cp -r opencode-live-compaction/src/* .opencode/plugins/live-compaction/
 ```
 
 ## How it works
@@ -91,9 +110,17 @@ To customize the compaction prompt, modify the `buildCompactionPrompt()` functio
 # Install dependencies
 bun install
 
+# Run tests
+bun test
+
+# Run tests with coverage
+bun run test:coverage
+
 # The plugin is TypeScript — no build step needed for OpenCode
 # (OpenCode loads .ts files directly via Bun)
 ```
+
+Current coverage: **100% statements, 100% lines, 100% functions, 85% branches** (52 tests).
 
 ## Compatibility
 

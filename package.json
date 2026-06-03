@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "description": "Enhanced context compaction for OpenCode — structured summaries with files-touched manifests, task-state continuity, and customizable prompt templates.",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "./src/index.ts",
+  "bin": {
+    "opencode-live-compaction": "./bin/install.js"
+  },
   "exports": {
     ".": "./src/index.ts"
   },
@@ -18,5 +21,14 @@
   "peerDependencies": {
     "@opencode-ai/plugin": ">=0.1.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.8",
+    "vitest": "^4.1.8"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  }
 }
