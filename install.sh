@@ -26,7 +26,9 @@ error() { echo -e "${RED}[error]${NC} $*" >&2; exit 1; }
 TARGET_DIR="${1:-.}"
 TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
 
-PLUGIN_DIR="${TARGET_DIR}/.opencode/plugins/live-compaction"
+PLUGIN_BASE="${TARGET_DIR}/.opencode/plugins"
+PLUGIN_DIR="${PLUGIN_BASE}/live-compaction"
+ENTRY_FILE="${PLUGIN_BASE}/live-compaction.ts"
 TMP_DIR=""
 
 cleanup() {
@@ -68,16 +70,30 @@ for file in index.ts prompt.ts files-touched.ts; do
   fi
 done
 
+# --- Create entry point barrel file ---
+# OpenCode scans .opencode/plugins/*.ts (not subdirs)
+# so we need a barrel file at the root that re-exports
+cat > "$ENTRY_FILE" << 'BARREL'
+/** opencode-live-compaction entry point */
+export { LiveCompactionPlugin, default } from "./live-compaction/index.ts"
+BARREL
+
 # --- Verify ---
 FILES_COUNT="$(find "$PLUGIN_DIR" -name '*.ts' | wc -l)"
 if [[ "$FILES_COUNT" -lt 3 ]]; then
   error "Expected 3 files, found ${FILES_COUNT}"
 fi
 
-ok "Plugin installed to ${PLUGIN_DIR}/"
-ok "  ├── index.ts"
-ok "  ├── prompt.ts"
-ok "  └── files-touched.ts"
+if [[ ! -f "$ENTRY_FILE" ]]; then
+  error "Entry point barrel file was not created"
+fi
+
+ok "Plugin installed:"
+ok "  ${PLUGIN_DIR}/"
+ok "    ├── index.ts"
+ok "    ├── prompt.ts"
+ok "    └── files-touched.ts"
+ok "  ${ENTRY_FILE} (entry point)"
 
 # --- Check if opencode.json exists and suggest plugin entry ---
 if [[ -f "${TARGET_DIR}/opencode.json" ]]; then
@@ -93,7 +109,7 @@ if [[ -f "${TARGET_DIR}/opencode.json" ]]; then
     info "Local plugin is already active — no config change needed."
   fi
 else
-  info "No opencode.json found. The local plugin will be auto-loaded from .opencode/plugins/"
+  info "No opencode.json found. The local plugin will be auto-loaded from .opencode/plugins/live-compaction.ts"
 fi
 
 echo ''

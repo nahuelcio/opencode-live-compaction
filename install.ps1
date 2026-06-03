@@ -15,6 +15,8 @@ $ErrorActionPreference = "Stop"
 # Resolve target
 $TargetDir = (Resolve-Path $TargetDir).Path
 $PluginDir = Join-Path $TargetDir ".opencode\plugins\live-compaction"
+$PluginBase = Join-Path $TargetDir ".opencode\plugins"
+$EntryFile = Join-Path $PluginBase "live-compaction.ts"
 
 Write-Host "[info]  Installing opencode-live-compaction into $TargetDir" -ForegroundColor Cyan
 
@@ -59,6 +61,12 @@ Write-Host "[ok]    Plugin installed to $PluginDir\" -ForegroundColor Green
 Write-Host "[ok]      +-- index.ts" -ForegroundColor Green
 Write-Host "[ok]      +-- prompt.ts" -ForegroundColor Green
 Write-Host "[ok]      +-- files-touched.ts" -ForegroundColor Green
+
+# Create entry point barrel file
+# OpenCode scans .opencode/plugins/*.ts (not subdirs)
+$barrelContent = '/** opencode-live-compaction entry point */' + [Environment]::NewLine + 'export { LiveCompactionPlugin, default } from "./live-compaction/index.ts"' + [Environment]::NewLine
+Set-Content -Path $EntryFile -Value $barrelContent -NoNewline
+Write-Host "[ok]    Entry point: $EntryFile" -ForegroundColor Green
 
 # Check opencode.json
 $ConfigFile = Join-Path $TargetDir "opencode.json"
