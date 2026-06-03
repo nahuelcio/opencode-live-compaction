@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { LiveCompactionPlugin } from "../src/index.ts";
-import type { FilesTouchedTracker } from "../src/files-touched.ts";
 
 // Access the internal session trackers map for testing
 // We test through the public plugin interface only
@@ -355,6 +354,105 @@ describe("LiveCompactionPlugin", () => {
 				outputB,
 			);
 			expect(outputB.prompt).not.toContain("b.ts");
+		});
+	});
+
+	// ---------------------------------------------------------------------------
+	// experimental.chat.messages.transform
+	// ---------------------------------------------------------------------------
+
+	describe("experimental.chat.messages.transform", () => {
+		it("trims long bash tool outputs", async () => {
+			const hooks = await getHooks();
+			const longOutput = "x".repeat(5000);
+			const messages = [
+				{
+					info: { role: "assistant" },
+					parts: [
+						{
+							type: "tool",
+							tool: "bash",
+							state: { output: longOutput },
+						},
+					],
+				},
+			];
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			expect(messages[0].parts[0].state.output.length).toBeLessThan(1000);
+			expect(messages[0].parts[0].state.output).toContain("[trimmed");
+		});
+
+		it("preserves short tool outputs", async () => {
+			const hooks = await getHooks();
+			const shortOutput = "File edited successfully";
+			const messages = [
+				{
+					info: { role: "assistant" },
+					parts: [
+						{
+							type: "tool",
+							tool: "edit",
+							state: { output: shortOutput },
+						},
+					],
+				},
+			];
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			expect(messages[0].parts[0].state.output).toBe(shortOutput);
+		});
+
+		it("trims read outputs to 300 chars", async () => {
+			const hooks = await getHooks();
+			const fileContent = "line\n".repeat(200); // ~1200 chars
+			const messages = [
+				{
+					info: { role: "assistant" },
+					parts: [
+						{ type: "tool", tool: "read", state: { output: fileContent } },
+					],
+				},
+			];
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			expect(messages[0].parts[0].state.output.length).toBeLessThan(400);
+		});
+
+		it("handles messages without tool parts", async () => {
+			const hooks = await getHooks();
+			const messages = [
+				{
+					info: { role: "user" },
+					parts: [{ type: "text", text: "hello" }],
+				},
+			];
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			expect(messages[0].parts[0].text).toBe("hello");
+		});
+
+		it("handles parts without state", async () => {
+			const hooks = await getHooks();
+			const messages = [
+				{
+					info: { role: "assistant" },
+					parts: [{ type: "tool", tool: "bash" }],
+				},
+			];
+			// Should not throw
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+		});
+
+		it("handles parts without tool name", async () => {
+			const hooks = await getHooks();
+			const messages = [
+				{
+					info: { role: "assistant" },
+					parts: [
+						{ type: "tool", state: { output: "something" } },
+					],
+				},
+			];
+			// Should not modify (no tool name)
+			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			expect(messages[0].parts[0].state.output).toBe("something");
 		});
 	});
 });

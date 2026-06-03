@@ -51,6 +51,20 @@ interface Hooks {
 		input: Record<string, unknown>,
 		output: { enabled: boolean },
 	) => Promise<void>;
+	"experimental.chat.messages.transform"?: (
+		input: Record<string, unknown>,
+		output: {
+			messages: Array<{
+				info: { role: string; [key: string]: unknown };
+				parts: Array<{
+					type: string;
+					tool?: string;
+					state?: { output?: string; [key: string]: unknown };
+					[key: string]: unknown;
+				}>;
+			}>;
+		},
+	) => Promise<void>;
 }
 
 // ---------------------------------------------------------------------------
@@ -66,6 +80,33 @@ function getTracker(sessionID: string): FilesTouchedTracker {
 		sessionTrackers.set(sessionID, tracker);
 	}
 	return tracker;
+}
+
+// ---------------------------------------------------------------------------
+// Tool output trimming for compaction
+// ---------------------------------------------------------------------------
+
+/** Max chars to keep per tool output type during compaction */
+const TOOL_TRIM: Record<string, number> = {
+	bash: 600,        // shell outputs (logs, test runs) — keep last 600 chars
+	write: 100,       // file write confirmations — minimal
+	edit: 100,        // edit confirmations — minimal
+	delete: 50,       // delete confirmations — minimal
+	read: 300,        // file reads — keep snippet
+	glob: 200,        // file listings
+	grep: 400,        // search results
+	list: 200,        // directory listings
+};
+
+const DEFAULT_TOOL_TRIM = 500;
+
+function trimToolOutput(toolName: string, output: string): string {
+	const limit = TOOL_TRIM[toolName] ?? DEFAULT_TOOL_TRIM;
+	if (output.length <= limit) return output;
+
+	const indicator = `\n... [trimmed ${output.length - limit}/${output.length} chars]`;
+	// Keep the END of output (usually has the important result/error)
+	return output.slice(-limit) + indicator;
 }
 
 // ---------------------------------------------------------------------------
@@ -106,6 +147,25 @@ export const LiveCompactionPlugin: Plugin = async (_ctx) => {
 
 			// Replace the default compaction prompt entirely
 			output.prompt = enhancedPrompt;
+		},
+
+		// -----------------------------------------------------------------------
+		// Trim tool outputs before compaction to save context tokens
+		// Runs BEFORE OpenCode's own 2000-char truncation, so we trim first.
+		// -----------------------------------------------------------------------
+		"experimental.chat.messages.transform": async (_input, output) => {
+			for (const msg of output.messages) {
+				for (const part of msg.parts) {
+					if (
+						part.type === "tool" &&
+						part.state &&
+						typeof part.state.output === "string" &&
+						part.tool
+					) {
+						part.state.output = trimToolOutput(part.tool, part.state.output);
+					}
+				}
+			}
 		},
 
 		// -----------------------------------------------------------------------
