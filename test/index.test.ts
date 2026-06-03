@@ -377,7 +377,9 @@ describe("LiveCompactionPlugin", () => {
 					],
 				},
 			];
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 			expect(messages[0].parts[0].state.output.length).toBeLessThan(1000);
 			expect(messages[0].parts[0].state.output).toContain("[trimmed");
 		});
@@ -397,7 +399,9 @@ describe("LiveCompactionPlugin", () => {
 					],
 				},
 			];
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 			expect(messages[0].parts[0].state.output).toBe(shortOutput);
 		});
 
@@ -412,7 +416,9 @@ describe("LiveCompactionPlugin", () => {
 					],
 				},
 			];
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 			expect(messages[0].parts[0].state.output.length).toBeLessThan(400);
 		});
 
@@ -424,7 +430,9 @@ describe("LiveCompactionPlugin", () => {
 					parts: [{ type: "text", text: "hello" }],
 				},
 			];
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 			expect(messages[0].parts[0].text).toBe("hello");
 		});
 
@@ -437,7 +445,9 @@ describe("LiveCompactionPlugin", () => {
 				},
 			];
 			// Should not throw
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 		});
 
 		it("handles parts without tool name", async () => {
@@ -445,13 +455,13 @@ describe("LiveCompactionPlugin", () => {
 			const messages = [
 				{
 					info: { role: "assistant" },
-					parts: [
-						{ type: "tool", state: { output: "something" } },
-					],
+					parts: [{ type: "tool", state: { output: "something" } }],
 				},
 			];
 			// Should not modify (no tool name)
-			await hooks["experimental.chat.messages.transform"]!({} as any, { messages });
+			await hooks["experimental.chat.messages.transform"]!({} as any, {
+				messages,
+			});
 			expect(messages[0].parts[0].state.output).toBe("something");
 		});
 	});

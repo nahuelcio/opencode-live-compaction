@@ -19,17 +19,7 @@ OpenCode's built-in compaction produces a 7-section summary. This plugin replace
 
 ## Install
 
-### Option 1: One-liner (npx)
-
-```bash
-npx opencode-live-compaction
-# or specify a project directory:
-npx opencode-live-compaction /path/to/project
-```
-
-### Option 2: One-liner (curl + bash)
-
-**macOS / Linux:**
+### Option 1: One-liner (curl + bash) — macOS / Linux
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.sh | bash
@@ -37,7 +27,7 @@ curl -fsSL https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/
 curl -fsSL https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.sh | bash -s /path/to/project
 ```
 
-**Windows (PowerShell):**
+### Option 2: One-liner (PowerShell) — Windows
 
 ```powershell
 irm https://raw.githubusercontent.com/nahuelcio/opencode-live-compaction/master/install.ps1 | iex

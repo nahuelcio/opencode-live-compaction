@@ -88,14 +88,14 @@ function getTracker(sessionID: string): FilesTouchedTracker {
 
 /** Max chars to keep per tool output type during compaction */
 const TOOL_TRIM: Record<string, number> = {
-	bash: 600,        // shell outputs (logs, test runs) — keep last 600 chars
-	write: 100,       // file write confirmations — minimal
-	edit: 100,        // edit confirmations — minimal
-	delete: 50,       // delete confirmations — minimal
-	read: 300,        // file reads — keep snippet
-	glob: 200,        // file listings
-	grep: 400,        // search results
-	list: 200,        // directory listings
+	bash: 600, // shell outputs (logs, test runs) — keep last 600 chars
+	write: 100, // file write confirmations — minimal
+	edit: 100, // edit confirmations — minimal
+	delete: 50, // delete confirmations — minimal
+	read: 300, // file reads — keep snippet
+	glob: 200, // file listings
+	grep: 400, // search results
+	list: 200, // directory listings
 };
 
 const DEFAULT_TOOL_TRIM = 500;
