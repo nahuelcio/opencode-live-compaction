@@ -1,0 +1,22 @@
+{
+  "name": "opencode-live-compaction",
+  "version": "0.1.0",
+  "description": "Enhanced context compaction for OpenCode — structured summaries with files-touched manifests, task-state continuity, and customizable prompt templates.",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "compaction",
+    "context-management",
+    "ai-coding"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=0.1.0"
+  },
+  "dependencies": {}
+}
