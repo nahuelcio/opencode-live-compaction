@@ -20,7 +20,7 @@ OpenCode's built-in compaction produces a 7-section summary. This plugin replace
 | **Duplicate tool calls** | Kept as-is | **Deduplicated** (keeps only latest) |
 | **Errored tool inputs** | Kept forever | **Purged** after N turns (error output preserved) |
 | **Manual compaction** | `/compact` only | `/compact` + `/compact:focus <goal>` |
-| **Protected files** | None | **Glob patterns** (`CLAUDE.md`, `**/*.config.ts`) never trimmed |
+| **Protected files** | None | **Glob patterns** (`AGENTS.md`, `**/*.config.ts`) never trimmed |
 | **Recent turn protection** | None | **Last N turns** protected from trimming (default: 4) |
 | **Compress tool** | None | Model-driven **compress** tool for proactive context management |
 
@@ -136,7 +136,7 @@ Files matching glob patterns are never trimmed, even if their outputs exceed the
 ```jsonc
 {
     "protectedFilePatterns": [
-        "CLAUDE.md",
+        "AGENTS.md",
         "**/*.config.ts",
         ".env*",
         "**/schema.prisma"

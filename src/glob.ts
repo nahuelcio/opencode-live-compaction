@@ -14,7 +14,7 @@ function escapeRegExpChar(ch: string): string {
 // Examples:
 //   matchesGlob("src/config.ts", "*.config.ts") => false
 //   matchesGlob("src/app.config.ts", "**/*.config.ts") => true
-//   matchesGlob("CLAUDE.md", "CLAUDE.md") => true (exact)
+//   matchesGlob("AGENTS.md", "AGENTS.md") => true (exact)
 //   matchesGlob("src/a.ts", "src/*.ts") => true
 export function matchesGlob(inputPath: string, pattern: string): boolean {
 	if (!pattern) return false;

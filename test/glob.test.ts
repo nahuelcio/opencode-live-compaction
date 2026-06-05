@@ -12,11 +12,11 @@ describe("matchesGlob()", () => {
 
 	// Exact match
 	it("matches exact file name", () => {
-		expect(matchesGlob("CLAUDE.md", "CLAUDE.md")).toBe(true);
+		expect(matchesGlob("AGENTS.md", "AGENTS.md")).toBe(true);
 	});
 
 	it("rejects non-matching exact name", () => {
-		expect(matchesGlob("README.md", "CLAUDE.md")).toBe(false);
+		expect(matchesGlob("README.md", "AGENTS.md")).toBe(false);
 	});
 
 	// Single wildcard *
@@ -151,7 +151,7 @@ describe("isFileProtected()", () => {
 	});
 
 	it("returns true for matching pattern", () => {
-		expect(isFileProtected(["CLAUDE.md"], ["CLAUDE.md"])).toBe(true);
+		expect(isFileProtected(["AGENTS.md"], ["AGENTS.md"])).toBe(true);
 	});
 
 	it("returns true for glob match", () => {
@@ -165,13 +165,13 @@ describe("isFileProtected()", () => {
 	});
 
 	it("checks multiple paths", () => {
-		expect(isFileProtected(["src/a.ts", "CLAUDE.md"], ["CLAUDE.md"])).toBe(
+		expect(isFileProtected(["src/a.ts", "AGENTS.md"], ["AGENTS.md"])).toBe(
 			true,
 		);
 	});
 
 	it("checks multiple patterns", () => {
-		expect(isFileProtected(["src/app.ts"], ["CLAUDE.md", "**/*.ts"])).toBe(
+		expect(isFileProtected(["src/app.ts"], ["AGENTS.md", "**/*.ts"])).toBe(
 			true,
 		);
 	});

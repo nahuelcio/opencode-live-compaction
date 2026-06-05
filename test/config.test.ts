@@ -128,10 +128,7 @@ describe("loadConfig()", () => {
 
 	it("handles JSONC with escaped quotes in strings", () => {
 		const jsonc = `{ "key": "value with \\"quotes\\" inside" }`;
-		writeFileSync(
-			join(TMP_DIR, ".opencode", "live-compaction.json"),
-			jsonc,
-		);
+		writeFileSync(join(TMP_DIR, ".opencode", "live-compaction.json"), jsonc);
 		const cfg = loadConfig(TMP_DIR);
 		// Should parse without error
 		expect(cfg).toBeDefined();
@@ -139,10 +136,7 @@ describe("loadConfig()", () => {
 
 	it("handles JSONC with strings containing special chars", () => {
 		const jsonc = `{ "key": "line1\\nline2\\ttab" }`;
-		writeFileSync(
-			join(TMP_DIR, ".opencode", "live-compaction.json"),
-			jsonc,
-		);
+		writeFileSync(join(TMP_DIR, ".opencode", "live-compaction.json"), jsonc);
 		const cfg = loadConfig(TMP_DIR);
 		expect(cfg).toBeDefined();
 	});
@@ -155,10 +149,7 @@ describe("loadConfig()", () => {
 			"debug": false
 			/* end comment */
 		}`;
-		writeFileSync(
-			join(TMP_DIR, ".opencode", "live-compaction.json"),
-			jsonc,
-		);
+		writeFileSync(join(TMP_DIR, ".opencode", "live-compaction.json"), jsonc);
 		const cfg = loadConfig(TMP_DIR);
 		expect(cfg.enabled).toBe(true);
 		expect(cfg.debug).toBe(false);
@@ -166,10 +157,7 @@ describe("loadConfig()", () => {
 
 	it("handles JSON with string values containing slashes", () => {
 		const jsonc = `{ "path": "C:\\Users\\test" }`;
-		writeFileSync(
-			join(TMP_DIR, ".opencode", "live-compaction.json"),
-			jsonc,
-		);
+		writeFileSync(join(TMP_DIR, ".opencode", "live-compaction.json"), jsonc);
 		const cfg = loadConfig(TMP_DIR);
 		expect(cfg).toBeDefined();
 	});

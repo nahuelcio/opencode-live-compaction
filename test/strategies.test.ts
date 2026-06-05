@@ -184,11 +184,25 @@ describe("applyDedup()", () => {
 		const msgs = [
 			{
 				info: { role: "assistant" },
-				parts: [{ type: "tool", tool: "read", args: nestedArgs, state: { output: "v1" } }],
+				parts: [
+					{
+						type: "tool",
+						tool: "read",
+						args: nestedArgs,
+						state: { output: "v1" },
+					},
+				],
 			},
 			{
 				info: { role: "assistant" },
-				parts: [{ type: "tool", tool: "read", args: { ...nestedArgs }, state: { output: "v2" } }],
+				parts: [
+					{
+						type: "tool",
+						tool: "read",
+						args: { ...nestedArgs },
+						state: { output: "v2" },
+					},
+				],
 			},
 		];
 		const count = applyDedup(msgs as any, cfg);
@@ -201,11 +215,25 @@ describe("applyDedup()", () => {
 		const msgs = [
 			{
 				info: { role: "assistant" },
-				parts: [{ type: "tool", tool: "bash", args: { command: "ls", cwd: "/tmp" }, state: { output: "v1" } }],
+				parts: [
+					{
+						type: "tool",
+						tool: "bash",
+						args: { command: "ls", cwd: "/tmp" },
+						state: { output: "v1" },
+					},
+				],
 			},
 			{
 				info: { role: "assistant" },
-				parts: [{ type: "tool", tool: "bash", args: { cwd: "/tmp", command: "ls" }, state: { output: "v2" } }],
+				parts: [
+					{
+						type: "tool",
+						tool: "bash",
+						args: { cwd: "/tmp", command: "ls" },
+						state: { output: "v2" },
+					},
+				],
 			},
 		];
 		const count = applyDedup(msgs as any, cfg);

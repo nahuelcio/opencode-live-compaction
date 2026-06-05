@@ -713,7 +713,7 @@ describe("LiveCompactionPlugin", () => {
 			if (!existsSync(dotDir)) mkdirSync(dotDir, { recursive: true });
 			writeFileSync(
 				join(dotDir, "live-compaction.json"),
-				JSON.stringify({ protectedFilePatterns: ["CLAUDE.md"] }),
+				JSON.stringify({ protectedFilePatterns: ["AGENTS.md"] }),
 			);
 			const hooks = await LiveCompactionPlugin({
 				...mockCtx,
@@ -728,7 +728,7 @@ describe("LiveCompactionPlugin", () => {
 						{
 							type: "tool",
 							tool: "read",
-							args: { filePath: "CLAUDE.md" },
+							args: { filePath: "AGENTS.md" },
 							state: { output: longContent },
 						},
 					],
@@ -737,7 +737,7 @@ describe("LiveCompactionPlugin", () => {
 			await hooks["experimental.chat.messages.transform"]!({} as any, {
 				messages,
 			});
-			// Should NOT be trimmed because CLAUDE.md is protected
+			// Should NOT be trimmed because AGENTS.md is protected
 			expect(messages[0].parts[0].state.output).toBe(longContent);
 		});
 
@@ -746,7 +746,7 @@ describe("LiveCompactionPlugin", () => {
 			if (!existsSync(dotDir)) mkdirSync(dotDir, { recursive: true });
 			writeFileSync(
 				join(dotDir, "live-compaction.json"),
-				JSON.stringify({ protectedFilePatterns: ["CLAUDE.md"] }),
+				JSON.stringify({ protectedFilePatterns: ["AGENTS.md"] }),
 			);
 			const hooks = await LiveCompactionPlugin({
 				...mockCtx,
